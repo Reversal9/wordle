@@ -72,6 +72,15 @@ The `gameReducer` (`src/hooks/gameReducer.ts`) is a pure function that handles a
 
 Components live in `src/components/ui/`. Add new components with `npx shadcn add <component>`. The project uses the `base-vega` style. Only `dialog`, `button`, and `sonner` are currently used by the game — the rest were bulk-installed.
 
+**Important:** This project uses `@base-ui/react` primitives (not Radix UI). Key differences:
+- No `asChild` prop — use the `render` prop pattern or style the primitive directly via `className`.
+- Modal/dropdown animations are done via `data-open:` and `data-closed:` Tailwind variants (from `tw-animate-css`), not component props. Example: `data-open:slide-in-from-bottom-4`.
+- `--popover` and `--popover-foreground` CSS variables are **not** defined in this project. Use explicit colors (e.g. `bg-white dark:bg-neutral-900`) instead of `bg-popover`.
+
+### Dark mode
+
+`ThemeProvider` (wrapping `App`) adds a `dark` class to `<html>`. Theme defaults to system preference. The toggle button in `Header` switches between light and dark directly (no dropdown). Page-level colors are driven by CSS variables `--page-bg` and `--page-fg` defined in `index.css`. All elements share a `0.2s ease` transition on `background-color`, `border-color`, and `color` so theme switches are synchronised — except `.tile-flip` which sets `transition: none` to avoid interfering with the mid-flip color switch.
+
 ## Word lists
 
 - `backend/data/words.json` — pre-generated daily puzzle words (ordered, deterministic by date)

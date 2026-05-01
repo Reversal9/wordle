@@ -11,7 +11,7 @@ export default function App() {
   const { state } = useGame()
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center min-h-screen max-w-[500px] mx-auto">
         <Header />
         {state.status === 'error' ? (

@@ -28,6 +28,12 @@ loading → playing → won | lost
 
 Managed by a pure `gameReducer` in `src/hooks/gameReducer.ts`. `GameProvider` wraps it with side effects: API fetch, localStorage sync keyed by date (`dnw-YYYY-MM-DD`), and physical keyboard handling.
 
+### UI notes
+
+- **Dark mode**: defaults to system preference; the sun/moon button in the header toggles between light and dark. All elements transition in sync (`0.2s ease` on bg/border/color).
+- **Modals**: use `@base-ui/react/dialog` with `tw-animate-css` utilities — `data-open:slide-in-from-bottom-4` produces the slide-up entrance. No Radix `asChild` — use `render` prop or direct `className` styling instead.
+- **Tile flip**: `--flip-color` CSS variable drives the mid-animation color switch at 50% (when the tile is edge-on and invisible to the user).
+
 ### Key invariants
 
 - `computeFeedback` uses a 2-pass algorithm to prevent double-counting duplicate letters

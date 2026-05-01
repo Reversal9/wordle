@@ -34,7 +34,17 @@
 body {
   background-color: var(--page-bg);
   color: var(--page-fg);
-  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Uniform theme transition — every element shifts together */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Tile flip animates bg/color via keyframes — suppress the transition there
+   so the mid-flip color switch is instant rather than smoothed over */
+.tile-flip {
+  transition: none;
 }
 
 /* Tile flip: starts at page bg color, switches to feedback color at mid-flip (50% = edge-on, invisible) */
