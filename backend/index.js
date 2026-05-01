@@ -1,5 +1,6 @@
 const express = require('express')
 const helmet = require('helmet')
+const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const fs = require('fs')
 const path = require('path')
@@ -8,11 +9,13 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(helmet())
-app.use(express.static(path.join(__dirname, '../frontend/dist')))
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+}))
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 30,
+  max: 120,
   standardHeaders: true,
   legacyHeaders: false,
 })
@@ -49,10 +52,6 @@ app.get('/api/word', limiter, (req, res) => {
   const word = words[((days % words.length) + words.length) % words.length]
   const puzzleNumber = days + 1
   res.json({ word, date: dateStr, puzzleNumber })
-})
-
-app.get('/{*splat}', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
 app.use((req, res) => {

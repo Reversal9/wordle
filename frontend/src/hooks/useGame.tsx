@@ -13,7 +13,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // Fetch today's word on mount
   useEffect(() => {
-    fetch(`/api/word?date=${dateStr}`)
+    fetch(`${import.meta.env.VITE_API_URL ?? ''}/api/word?date=${dateStr}`)
       .then(r => {
         if (!r.ok) throw new Error('fetch failed')
         return r.json()

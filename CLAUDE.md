@@ -40,16 +40,17 @@ browser → Vite dev server → /api/* proxy → Express (port 3000)
                                            └── backend/data/words.json
 ```
 
-**Production (Render):**
+**Production (Render — two services):**
 ```
-browser → Express (Render)
-             ├── GET /api/word  →  word logic
-             └── GET /*         →  serves frontend/dist (static)
+browser → Render Static Site (frontend/dist, CDN)
+             └── fetch(VITE_API_URL + '/api/word') → Render Web Service (Express)
 ```
 
-The frontend fetches `/api/word?date=YYYY-MM-DD` on mount using a relative URL — this works in both dev (via Vite proxy) and production (same origin). The backend picks the word deterministically by days since `2026-04-30` (puzzle #1), cycling through the pre-generated word list.
+The frontend fetches `${VITE_API_URL}/api/word?date=YYYY-MM-DD`. `VITE_API_URL` is inlined at build time by Vite — set it as an env var on the Render Static Site. When undefined (local dev), it falls back to `''` so the Vite proxy still handles `/api/*` transparently. The backend picks the word deterministically by days since `2026-04-30` (puzzle #1), cycling through the pre-generated word list.
 
-**Render deploy settings:** root dir blank, build `cd frontend && npm ci && npm run build && cd ../backend && npm ci`, start `node backend/index.js`, no env vars needed.
+**Render deploy settings:**
+- Backend Web Service: root `backend`, build `npm ci`, start `node index.js`, env `FRONTEND_ORIGIN=<static-site-url>`
+- Frontend Static Site: root `frontend`, build `npm ci && npm run build`, publish `dist`, env `VITE_API_URL=<backend-url>`
 
 ### State machine
 

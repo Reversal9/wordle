@@ -42,15 +42,29 @@ Managed by a pure `gameReducer` in `src/hooks/gameReducer.ts`. `GameProvider` wr
 
 ## Deploying (Render)
 
-The backend serves the built frontend as static files — one Render web service, no env vars needed.
+Two separate Render services — a Static Site for the frontend and a Web Service for the backend.
+
+### Backend — Web Service
 
 | Field | Value |
 |---|---|
-| **Root Directory** | *(leave blank)* |
-| **Build Command** | `cd frontend && npm ci && npm run build && cd ../backend && npm ci` |
-| **Start Command** | `node backend/index.js` |
+| **Root Directory** | `backend` |
+| **Build Command** | `npm ci` |
+| **Start Command** | `node index.js` |
+| **Env var** | `FRONTEND_ORIGIN=https://your-frontend.onrender.com` |
 
-Render's free tier spins down after 15 min of inactivity (~30s cold start). Use [UptimeRobot](https://uptimerobot.com) or [cron-job.org](https://cron-job.org) to ping `/api/word` every 5–10 minutes if you want it to stay warm.
+### Frontend — Static Site
+
+| Field | Value |
+|---|---|
+| **Root Directory** | `frontend` |
+| **Build Command** | `npm ci && npm run build` |
+| **Publish Directory** | `dist` |
+| **Env var** | `VITE_API_URL=https://your-backend.onrender.com` |
+
+Deploy the backend first to get its URL, then set `VITE_API_URL` before triggering the frontend build.
+
+Render's free Web Service tier spins down after 15 min of inactivity (~30s cold start). Use [UptimeRobot](https://uptimerobot.com) or [cron-job.org](https://cron-job.org) to ping `https://your-backend.onrender.com/api/word` every 5–10 minutes to keep it warm.
 
 ## Running locally
 
