@@ -51,8 +51,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'DELETE_LETTER' })
   }
 
+  // After each guess the tiles flip for 900ms (4 × 100ms stagger + 500ms flip).
+  // Block all input during this window, then open the game-over modal if needed.
+  const REVEAL_MS = 4 * 100 + 500
+  useEffect(() => {
+    if (!state.isRevealing) return
+    const timer = setTimeout(() => {
+      dispatch({ type: 'REVEAL_DONE' })
+      if (state.status === 'won' || state.status === 'lost') {
+        dispatch({ type: 'OPEN_MODAL', modal: 'game-over' })
+      }
+    }, REVEAL_MS)
+    return () => clearTimeout(timer)
+  }, [state.isRevealing, state.status])
+
   function submitGuess() {
-    if (state.status !== 'playing') return
+    if (state.status !== 'playing' || state.isRevealing) return
     const guess = state.currentInput.join('')
     if (state.currentInput.length !== 5 || !validWords.has(guess)) {
       dispatch({ type: 'SET_SHAKING', value: true })
@@ -80,7 +94,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [state.status, state.currentInput])
+  }, [state.status, state.currentInput, state.isRevealing])
   // React Compiler handles memoization — no useCallback needed
 
   // Derive keyboard colors: green > yellow > gray priority

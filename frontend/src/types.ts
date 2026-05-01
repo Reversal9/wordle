@@ -11,6 +11,7 @@ export type GameState = {
   status: GameStatus
   activeModal: ActiveModal
   isShaking: boolean
+  isRevealing: boolean
 }
 
 export type GameAction =
@@ -20,6 +21,7 @@ export type GameAction =
   | { type: 'TYPE_LETTER'; letter: string }
   | { type: 'DELETE_LETTER' }
   | { type: 'SUBMIT_GUESS' }
+  | { type: 'REVEAL_DONE' }
   | { type: 'SET_SHAKING'; value: boolean }
   | { type: 'OPEN_MODAL'; modal: 'how-to-play' | 'game-over' | 'welcome-back' }
   | { type: 'CLOSE_MODAL' }

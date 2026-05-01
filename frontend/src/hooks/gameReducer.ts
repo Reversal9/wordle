@@ -10,6 +10,7 @@ export const initialState: GameState = {
   status: 'loading',
   activeModal: null,
   isShaking: false,
+  isRevealing: false,
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -24,13 +25,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, guesses: action.guesses, feedback: action.feedback, status: action.status }
 
     case 'TYPE_LETTER': {
-      if (state.status !== 'playing') return state
+      if (state.status !== 'playing' || state.isRevealing) return state
       if (state.currentInput.length >= 5) return state
       return { ...state, currentInput: [...state.currentInput, action.letter] }
     }
 
     case 'DELETE_LETTER': {
-      if (state.status !== 'playing') return state
+      if (state.status !== 'playing' || state.isRevealing) return state
       if (state.currentInput.length === 0) return state
       return { ...state, currentInput: state.currentInput.slice(0, -1) }
     }
@@ -49,9 +50,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         feedback: newFeedback,
         currentInput: [],
         status,
-        activeModal: won || lost ? 'game-over' : state.activeModal,
+        isRevealing: true,
       }
     }
+
+    case 'REVEAL_DONE':
+      return { ...state, isRevealing: false }
 
     case 'SET_SHAKING':
       return { ...state, isShaking: action.value }
