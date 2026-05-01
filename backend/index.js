@@ -9,7 +9,11 @@ const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/words.json')
 const START_DATE = '2026-04-30'
 
 function isValidDate(str) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(str) && !isNaN(new Date(str).getTime())
+  if (typeof str !== 'string') return false
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
+  const d = new Date(str)
+  if (isNaN(d.getTime())) return false
+  return d.toISOString().startsWith(str)
 }
 
 function daysSinceStart(dateStr) {
