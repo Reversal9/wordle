@@ -1,0 +1,78 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+"Definitely Not Wordle" — a fullstack daily word game. Node/Express backend serves today's word; React/TypeScript frontend handles all game logic.
+
+## Commands
+
+### Frontend (run from `frontend/`)
+```bash
+npm run dev          # Vite dev server (port 5173, proxies /api/* to port 3000)
+npm run build        # tsc -b && vite build
+npm run lint         # ESLint
+npm test             # Vitest (run once)
+npm run test:watch   # Vitest (watch mode)
+```
+
+Run a single test file:
+```bash
+npx vitest run src/lib/feedback.test.ts
+```
+
+### Backend (run from `backend/`)
+```bash
+node index.js        # Express server on port 3000 (default)
+PORT=4000 node index.js
+```
+
+For local development, start backend first, then frontend dev server.
+
+## Architecture
+
+### Data flow
+
+```
+browser → Vite dev server → /api/* proxy → Express (port 3000)
+                                           └── backend/data/words.json
+```
+
+The frontend fetches `/api/word?date=YYYY-MM-DD` on mount. The backend picks the word deterministically by days since `2026-04-30` (puzzle #1), cycling through the pre-generated word list.
+
+### State machine
+
+All game state lives in a single `GameState` (defined in `src/types.ts`) managed by `useReducer` in `GameProvider` (`src/hooks/useGame.tsx`). Components call `useGame()` and are purely presentational — they never hold local game state.
+
+Status lifecycle: `loading` → `playing` → `won | lost` (or `error` on fetch failure).
+
+The `gameReducer` (`src/hooks/gameReducer.ts`) is a pure function that handles all transitions. `useGame.tsx` wraps it with side effects: fetch on mount, localStorage sync after every guess, physical keyboard listener, keyboard color derivation.
+
+### Key invariants
+
+- `computeFeedback` (`src/lib/feedback.ts`) uses a 2-pass algorithm: Pass 1 marks exact matches (G) and nulls out their pool slots; Pass 2 scans remaining letters for misplaced matches (Y). The pool prevents double-counting duplicate letters.
+- `validWords` (`src/lib/words.ts`) is a `Set<string>` built at module load from `frontend/data/valid-wordle-words.txt` via Vite's `?raw` import. Guesses are rejected before dispatch if not in this set.
+- localStorage is keyed `dnw-YYYY-MM-DD`, so different dates never collide. State is loaded after `LOAD_SUCCESS` so the word is always set before history is restored.
+- `LetterFeedback = 'G' | 'Y' | 'X'` is the single source of truth for tile color; CSS variables (`--color-correct`, `--color-present`, `--color-absent`) map to the visual colors in `index.css`.
+
+### TypeScript constraints
+
+`verbatimModuleSyntax` is enabled. Type-only imports **must** use `import type { ... }` or the inline form `import { value, type OnlyType }`. Mixing value and type imports in the same statement requires the inline form.
+
+### React Compiler
+
+`babel-plugin-react-compiler` is configured. **Do not add `useMemo` or `useCallback`** — the compiler handles memoization automatically and manual additions may conflict.
+
+### Path alias
+
+`@/` resolves to `frontend/src/`. Configured in both `vite.config.ts` (runtime) and `tsconfig.app.json` (type checking).
+
+### shadcn/ui
+
+Components live in `src/components/ui/`. Add new components with `npx shadcn add <component>`. The project uses the `base-vega` style. Only `dialog`, `button`, and `sonner` are currently used by the game — the rest were bulk-installed.
+
+## Word lists
+
+- `backend/data/words.json` — pre-generated daily puzzle words (ordered, deterministic by date)
+- `frontend/data/valid-wordle-words.txt` — full valid-guess dictionary (14,855 words, one per line)
