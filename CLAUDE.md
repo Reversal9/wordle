@@ -58,14 +58,15 @@ All game state lives in a single `GameState` (defined in `src/types.ts`) managed
 
 Status lifecycle: `loading` → `playing` → `won | lost` (or `error` on fetch failure).
 
-The `gameReducer` (`src/hooks/gameReducer.ts`) is a pure function that handles all transitions. `useGame.tsx` wraps it with side effects: fetch on mount, localStorage sync after every guess, physical keyboard listener, keyboard color derivation.
+The `gameReducer` (`src/hooks/gameReducer.ts`) is a pure function that handles all transitions. `useGame.tsx` wraps it with side effects: fetch on mount, localStorage sync after every guess, physical keyboard listener, keyboard color derivation, and reveal animation gating.
 
 ### Key invariants
 
 - `computeFeedback` (`src/lib/feedback.ts`) uses a 2-pass algorithm: Pass 1 marks exact matches (G) and nulls out their pool slots; Pass 2 scans remaining letters for misplaced matches (Y). The pool prevents double-counting duplicate letters.
 - `validWords` (`src/lib/words.ts`) is a `Set<string>` built at module load from `frontend/data/valid-wordle-words.txt` via Vite's `?raw` import. Guesses are rejected before dispatch if not in this set.
 - localStorage is keyed `dnw-YYYY-MM-DD`, so different dates never collide. State is loaded after `LOAD_SUCCESS` so the word is always set before history is restored.
-- `LetterFeedback = 'G' | 'Y' | 'X'` is the single source of truth for tile color; CSS variables (`--color-correct`, `--color-present`, `--color-absent`) map to the visual colors in `index.css`.
+- `LetterFeedback = 'G' | 'Y' | 'X'` is the single source of truth for tile color; CSS variables (`--color-correct`, `--color-present`, `--color-absent`) map to the visual colors in `index.css`. In dark mode `--color-absent` is overridden to `#4a4a4c` (deepslate) so exhausted tiles are visually distinct from empty ones.
+- `isRevealing` in `GameState` gates all input (typing, deleting, submitting) for 900ms after each guess — the duration of the full tile-flip sequence (`4 × 100ms stagger + 500ms flip`). `SUBMIT_GUESS` sets it; `REVEAL_DONE` clears it. The game-over modal is opened by a `useEffect` in `useGame.tsx` after `REVEAL_DONE`, not synchronously in the reducer.
 
 ### TypeScript constraints
 
