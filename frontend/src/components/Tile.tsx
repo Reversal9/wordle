@@ -42,8 +42,8 @@ export function Tile({ letter, feedback, isRevealing, revealDelay }: TileProps) 
     borderClass = FEEDBACK_BORDER[feedback]
   } else {
     // Empty, filled-but-unsubmitted, or mid-animation: page bg, page fg text
-    bgClass = 'bg-[var(--page-bg)]'
-    textClass = 'text-[var(--page-fg)]'
+    bgClass = 'bg-background'
+    textClass = 'text-foreground'
     borderClass = hasLetter || isAnimating
       ? 'border-[var(--color-tile-border-filled)]'
       : 'border-[var(--color-tile-border-empty)]'
@@ -61,7 +61,7 @@ export function Tile({ letter, feedback, isRevealing, revealDelay }: TileProps) 
         flex items-center justify-center
         w-[var(--tile-size)] h-[var(--tile-size)]
         text-2xl font-bold uppercase select-none
-        border-2 ${bgClass} ${textClass} ${borderClass}
+        border-2 transition-colors duration-200 ${bgClass} ${textClass} ${borderClass}
         ${isAnimating ? 'tile-flip' : ''}
       `}
       style={style}

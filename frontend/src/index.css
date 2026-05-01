@@ -109,10 +109,9 @@
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* Tile flip animates bg/color via keyframes — suppress transition so the
-   mid-flip color switch is instant rather than smoothed over */
+/* CSS animations suppress transitions on the properties they control (per spec),
+   so no transition:none needed here — theme transitions still fire on tiles */
 .tile-flip {
-  transition: none;
   animation: tile-flip 0.5s ease forwards;
 }
 
