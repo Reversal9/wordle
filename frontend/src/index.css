@@ -1,13 +1,58 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* Use class-based dark mode so ThemeProvider's .dark on <html> controls all dark: utilities */
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
-@theme {
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --font-display: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 :root {
+  --radius: 0.5rem;
+
+  /* shadcn semantic tokens — light */
+  --background: #fffdf8;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #1a1a1a;
+  --primary-foreground: #ffffff;
+  --secondary: #d3d6da;
+  --secondary-foreground: #1a1a1a;
+  --muted: #efefef;
+  --muted-foreground: #787c7e;
+  --accent: #efefef;
+  --accent-foreground: #1a1a1a;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e5e0d8;
+  --input: #e5e0d8;
+  --ring: #878a8c;
+
+  /* Game-specific tokens */
   --color-correct: #6aaa64;
   --color-present: #c9b458;
   --color-absent: #787c7e;
@@ -16,27 +61,47 @@
   --tile-size: clamp(52px, 11vw, 62px);
   --key-height: clamp(52px, 8vh, 58px);
 
-  /* Page-level theming */
-  --page-bg: #fffdf8;
-  --page-fg: #1a1a1a;
-  --header-border: #e5e0d8;
-  --key-default-bg: #d3d6da;
-  --key-default-fg: #1a1a1a;
+  /* Component aliases — point at semantic tokens so everything moves together */
+  --page-bg: var(--background);
+  --page-fg: var(--foreground);
+  --header-border: var(--border);
+  --key-default-bg: var(--secondary);
+  --key-default-fg: var(--secondary-foreground);
 }
 
 .dark {
-  --page-bg: #121213;
-  --page-fg: #ffffff;
-  --header-border: #2a2a2b;
-  --key-default-bg: #818384;
-  --key-default-fg: #ffffff;
+  /* shadcn semantic tokens — dark */
+  --background: #121213;
+  --foreground: #ffffff;
+  --card: #1c1c1e;
+  --card-foreground: #ffffff;
+  --popover: #1c1c1e;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #1a1a1a;
+  --secondary: #818384;
+  --secondary-foreground: #ffffff;
+  --muted: #2c2c2e;
+  --muted-foreground: #a0a0a0;
+  --accent: #2c2c2e;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: #2a2a2b;
+  --input: #2a2a2b;
+  --ring: #565758;
+
+  /* Game-specific dark overrides */
   --color-tile-border-empty: #3a3a3c;
   --color-tile-border-filled: #565758;
 }
 
-body {
-  background-color: var(--page-bg);
-  color: var(--page-fg);
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* Uniform theme transition — every element shifts together */
@@ -44,23 +109,32 @@ body {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* Tile flip animates bg/color via keyframes — suppress the transition there
-   so the mid-flip color switch is instant rather than smoothed over */
+/* Tile flip animates bg/color via keyframes — suppress transition so the
+   mid-flip color switch is instant rather than smoothed over */
 .tile-flip {
   transition: none;
+  animation: tile-flip 0.5s ease forwards;
 }
 
-/* Tile flip: starts at page bg color, switches to feedback color at mid-flip (50% = edge-on, invisible) */
+.row-shake {
+  animation: row-shake 0.6s ease;
+}
+
+.tile-bounce {
+  animation: tile-bounce 0.4s ease;
+}
+
+/* Tile flip: starts at page bg, switches to feedback color at 50% (edge-on = invisible) */
 @keyframes tile-flip {
   0% {
     transform: rotateX(0deg);
-    background-color: var(--page-bg);
-    color: var(--page-fg);
+    background-color: var(--background);
+    color: var(--foreground);
     border-color: var(--color-tile-border-filled);
   }
   49% {
-    background-color: var(--page-bg);
-    color: var(--page-fg);
+    background-color: var(--background);
+    color: var(--foreground);
   }
   50% {
     transform: rotateX(-90deg);
@@ -90,16 +164,4 @@ body {
   0%, 100% { transform: translateY(0); }
   40%       { transform: translateY(-16px); }
   60%       { transform: translateY(-8px); }
-}
-
-.tile-flip {
-  animation: tile-flip 0.5s ease forwards;
-}
-
-.row-shake {
-  animation: row-shake 0.6s ease;
-}
-
-.tile-bounce {
-  animation: tile-bounce 0.4s ease;
 }

@@ -19,7 +19,7 @@ export function GameOverModal() {
   async function handleShare() {
     const text = buildShareText(state.puzzleNumber, state.feedback, !won)
     const success = await copyToClipboard(text)
-    toast(success ? 'Copied to clipboard!' : "Couldn't copy — try manually.")
+    toast.info(success ? 'Copied to clipboard!' : "Couldn't copy — try manually.")
   }
 
   return (
