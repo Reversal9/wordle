@@ -11,7 +11,7 @@ describe('storage', () => {
   it('saves and loads state for a date', () => {
     const state = {
       guesses: ['crane'],
-      feedback: [['G','Y','X','X','X']] as const,
+      feedback: [['G','Y','X','X','X'] as import('../types').LetterFeedback[]],
       status: 'playing' as const,
     }
     saveState('2026-04-30', state)

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { gameReducer, initialState } from './gameReducer'
-import { GameState } from '../types'
+import type { GameState } from '../types'
 
 const playingState: GameState = {
   ...initialState,
@@ -78,7 +78,7 @@ describe('gameReducer', () => {
         ['X','X','X','X','X'],
         ['X','X','X','X','X'],
         ['X','X','X','X','X'],
-      ] as const,
+      ] as import('../types').LetterFeedback[][],
       currentInput: ['z','z','z','z','z'],
     }
     const next = gameReducer(state, { type: 'SUBMIT_GUESS' })

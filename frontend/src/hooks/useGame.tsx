@@ -1,5 +1,5 @@
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
-import { GameContextValue, LetterFeedback } from '../types'
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
+import type { GameContextValue, LetterFeedback } from '../types'
 import { gameReducer, initialState } from './gameReducer'
 import { validWords } from '../lib/words'
 import { getLocalDateStr } from '../lib/date'

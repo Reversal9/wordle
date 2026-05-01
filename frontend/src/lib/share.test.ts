@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { buildShareText } from './share'
-import { LetterFeedback } from '../types'
+import type { LetterFeedback } from '../types'
 
 describe('buildShareText', () => {
   it('builds win share text with correct emoji grid', () => {

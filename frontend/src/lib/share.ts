@@ -1,4 +1,4 @@
-import { LetterFeedback } from '../types'
+import type { LetterFeedback } from '../types'
 
 const EMOJI: Record<LetterFeedback, string> = {
   G: '🟩',

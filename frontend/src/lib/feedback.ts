@@ -1,4 +1,4 @@
-import { LetterFeedback } from '../types'
+import type { LetterFeedback } from '../types'
 
 export function computeFeedback(guess: string, answer: string): LetterFeedback[] {
   const result: LetterFeedback[] = Array(5).fill('X')

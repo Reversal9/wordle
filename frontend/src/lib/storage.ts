@@ -1,4 +1,4 @@
-import { SavedState } from '../types'
+import type { SavedState } from '../types'
 
 function key(dateStr: string): string {
   return `dnw-${dateStr}`
