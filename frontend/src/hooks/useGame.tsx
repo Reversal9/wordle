@@ -1,9 +1,9 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
-import type { GameContextValue, LetterFeedback } from '../types'
-import { gameReducer, initialState } from './gameReducer'
-import { validWords } from '../lib/words'
-import { getLocalDateStr } from '../lib/date'
-import { loadState, saveState } from '../lib/storage'
+import type { GameContextValue, LetterFeedback } from '@/types'
+import { gameReducer, initialState } from '@/hooks/gameReducer'
+import { validWords } from '@/lib/words'
+import { getLocalDateStr } from '@/lib/date'
+import { loadState, saveState } from '@/lib/storage'
 
 const GameContext = createContext<GameContextValue | null>(null)
 
@@ -64,6 +64,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // Physical keyboard input
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
+      if (e.ctrlKey || e.altKey || e.metaKey) return
       if (e.key === 'Enter') submitGuess()
       else if (e.key === 'Backspace') deleteLetter()
       else if (/^[a-zA-Z]$/.test(e.key)) typeLetter(e.key.toLowerCase())

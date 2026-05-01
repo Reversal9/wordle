@@ -1,5 +1,5 @@
-import type { LetterFeedback } from '../types'
-import { Tile } from './Tile'
+import type { LetterFeedback } from '@/types'
+import { Tile } from '@/components/Tile'
 
 type RowProps = {
   letters: string[]

@@ -1,5 +1,5 @@
-import type { LetterFeedback } from '../types'
-import { useGame } from '../hooks/useGame'
+import type { LetterFeedback } from '@/types'
+import { useGame } from '@/hooks/useGame'
 
 type KeyProps = {
   value: string
@@ -23,7 +23,7 @@ export function Key({ value, feedback }: KeyProps) {
 
   const isWide = value === 'Enter' || value === 'Backspace'
   const label = value === 'Backspace' ? '⌫' : value.toUpperCase()
-  const colorClass = feedback ? KEY_BG[feedback] : 'bg-[#d3d6da] text-black'
+  const colorClass = feedback ? KEY_BG[feedback] : 'bg-[var(--key-default-bg)] text-[var(--key-default-fg)]'
 
   return (
     <button

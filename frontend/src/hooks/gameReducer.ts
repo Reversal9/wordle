@@ -1,5 +1,5 @@
-import type { GameState, GameAction } from '../types'
-import { computeFeedback } from '../lib/feedback'
+import type { GameState, GameAction } from '@/types'
+import { computeFeedback } from '@/lib/feedback'
 
 export const initialState: GameState = {
   word: '',

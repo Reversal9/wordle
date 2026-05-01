@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
 :root {
   --color-correct: #6aaa64;
   --color-present: #c9b458;
@@ -8,12 +12,57 @@
   --color-tile-border-filled: #878a8c;
   --tile-size: clamp(52px, 11vw, 62px);
   --key-height: clamp(52px, 8vh, 58px);
+
+  /* Page-level theming */
+  --page-bg: #fffdf8;
+  --page-fg: #1a1a1a;
+  --header-border: #e5e0d8;
+  --key-default-bg: #d3d6da;
+  --key-default-fg: #1a1a1a;
 }
 
+.dark {
+  --page-bg: #121213;
+  --page-fg: #ffffff;
+  --header-border: #2a2a2b;
+  --key-default-bg: #818384;
+  --key-default-fg: #ffffff;
+  --color-tile-border-empty: #3a3a3c;
+  --color-tile-border-filled: #565758;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--page-fg);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Tile flip: starts at page bg color, switches to feedback color at mid-flip (50% = edge-on, invisible) */
 @keyframes tile-flip {
-  0%   { transform: rotateX(0deg); }
-  50%  { transform: rotateX(-90deg); }
-  100% { transform: rotateX(0deg); }
+  0% {
+    transform: rotateX(0deg);
+    background-color: var(--page-bg);
+    color: var(--page-fg);
+    border-color: var(--color-tile-border-filled);
+  }
+  49% {
+    background-color: var(--page-bg);
+    color: var(--page-fg);
+  }
+  50% {
+    transform: rotateX(-90deg);
+  }
+  51% {
+    background-color: var(--flip-color);
+    color: white;
+    border-color: var(--flip-color);
+  }
+  100% {
+    transform: rotateX(0deg);
+    background-color: var(--flip-color);
+    color: white;
+    border-color: var(--flip-color);
+  }
 }
 
 @keyframes row-shake {

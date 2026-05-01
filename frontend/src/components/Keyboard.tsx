@@ -1,5 +1,5 @@
-import { useGame } from '../hooks/useGame'
-import { Key } from './Key'
+import { useGame } from '@/hooks/useGame'
+import { Key } from '@/components/Key'
 
 const ROWS = [
   ['q','w','e','r','t','y','u','i','o','p'],

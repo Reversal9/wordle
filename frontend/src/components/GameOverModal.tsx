@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
-import { useGame } from '../hooks/useGame'
-import { buildShareText, copyToClipboard } from '../lib/share'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useGame } from '@/hooks/useGame'
+import { buildShareText, copyToClipboard } from '@/lib/share'
 import { toast } from 'sonner'
 
 const WIN_TIERS = ['🤯 Genius', '🔥 Magnificent', '⭐ Impressive', '👍 Splendid', '😅 Great', '😤 Phew']
@@ -31,11 +31,11 @@ export function GameOverModal() {
         <div className="space-y-4">
           <p className="text-2xl font-bold">{tier}</p>
           {!won && (
-            <p className="text-gray-600">
-              The word was <strong className="text-black uppercase">{state.word}</strong>
+            <p className="text-gray-600 dark:text-gray-400">
+              The word was <strong className="text-black dark:text-white uppercase">{state.word}</strong>
             </p>
           )}
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Puzzle #{state.puzzleNumber} — {state.guesses.length}/6
           </p>
           {(won || state.status === 'lost') && (

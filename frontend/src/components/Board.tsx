@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useGame } from '../hooks/useGame'
-import { Row } from './Row'
+import { useGame } from '@/hooks/useGame'
+import { Row } from '@/components/Row'
 
 export function Board() {
   const { state } = useGame()
