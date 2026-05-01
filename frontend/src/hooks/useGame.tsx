@@ -23,6 +23,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
         const saved = loadState(dateStr)
         if (saved) {
           dispatch({ type: 'RESTORE_STATE', guesses: saved.guesses, feedback: saved.feedback, status: saved.status })
+          if (saved.status === 'won' || saved.status === 'lost') {
+            dispatch({ type: 'OPEN_MODAL', modal: 'game-over' })
+          } else if (saved.guesses.length > 0) {
+            dispatch({ type: 'OPEN_MODAL', modal: 'welcome-back' })
+          } else {
+            dispatch({ type: 'OPEN_MODAL', modal: 'how-to-play' })
+          }
+        } else {
+          dispatch({ type: 'OPEN_MODAL', modal: 'how-to-play' })
         }
       })
       .catch(() => dispatch({ type: 'LOAD_ERROR' }))
@@ -53,7 +62,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SUBMIT_GUESS' })
   }
 
-  function openModal(modal: 'how-to-play' | 'game-over') {
+  function openModal(modal: 'how-to-play' | 'game-over' | 'welcome-back') {
     dispatch({ type: 'OPEN_MODAL', modal })
   }
 

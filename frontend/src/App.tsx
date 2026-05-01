@@ -6,6 +6,7 @@ import { Keyboard } from '@/components/Keyboard'
 import { ErrorScreen } from '@/components/ErrorScreen'
 import { HowToPlayModal } from '@/components/HowToPlayModal'
 import { GameOverModal } from '@/components/GameOverModal'
+import { WelcomeBackModal } from '@/components/WelcomeBackModal'
 
 export default function App() {
   const { state } = useGame()
@@ -28,6 +29,7 @@ export default function App() {
         )}
         <HowToPlayModal />
         <GameOverModal />
+        <WelcomeBackModal />
       </div>
     </ThemeProvider>
   )
