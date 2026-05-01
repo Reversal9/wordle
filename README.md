@@ -30,9 +30,9 @@ Managed by a pure `gameReducer` in `src/hooks/gameReducer.ts`. `GameProvider` wr
 
 ### UI notes
 
-- **Dark mode**: defaults to system preference; the sun/moon button in the header toggles between light and dark. All elements transition in sync (`0.2s ease` on bg/border/color).
+- **Dark mode**: defaults to system preference; the sun/moon button in the header toggles between light and dark. All elements transition in sync (`0.2s ease` on bg/border/color). A blocking inline `<script>` in `index.html` applies the saved theme class and background color before any CSS loads, preventing the flash-of-white on refresh.
 - **Modals**: use `@base-ui/react/dialog` with `tw-animate-css` utilities — `data-open:slide-in-from-bottom-4` produces the slide-up entrance. No Radix `asChild` — use `render` prop or direct `className` styling instead.
-- **Tile flip**: `--flip-color` CSS variable drives the mid-animation color switch at 50% (when the tile is edge-on and invisible to the user).
+- **Tile flip**: `--flip-color` CSS variable drives the mid-animation color switch at 50% (when the tile is edge-on and invisible to the user). CSS animations suppress transitions on the properties they control per spec, so `.tile-flip` does not need `transition: none`.
 
 ### Key invariants
 

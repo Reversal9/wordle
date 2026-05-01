@@ -75,11 +75,15 @@ Components live in `src/components/ui/`. Add new components with `npx shadcn add
 **Important:** This project uses `@base-ui/react` primitives (not Radix UI). Key differences:
 - No `asChild` prop — use the `render` prop pattern or style the primitive directly via `className`.
 - Modal/dropdown animations are done via `data-open:` and `data-closed:` Tailwind variants (from `tw-animate-css`), not component props. Example: `data-open:slide-in-from-bottom-4`.
-- `--popover` and `--popover-foreground` CSS variables are **not** defined in this project. Use explicit colors (e.g. `bg-white dark:bg-neutral-900`) instead of `bg-popover`.
+- All shadcn semantic tokens (`--popover`, `--popover-foreground`, `--background`, etc.) are fully defined in `index.css` under `:root` and `.dark`. Use Tailwind semantic classes (`bg-popover`, `bg-background`, etc.) freely.
 
 ### Dark mode
 
-`ThemeProvider` (wrapping `App`) adds a `dark` class to `<html>`. Theme defaults to system preference. The toggle button in `Header` switches between light and dark directly (no dropdown). Page-level colors are driven by CSS variables `--page-bg` and `--page-fg` defined in `index.css`. All elements share a `0.2s ease` transition on `background-color`, `border-color`, and `color` so theme switches are synchronised — except `.tile-flip` which sets `transition: none` to avoid interfering with the mid-flip color switch.
+`ThemeProvider` lives in `main.tsx` (not `App.tsx`) so `useTheme()` works inside the `Toaster`. It adds a `dark` class to `<html>`. Theme defaults to system preference; the sun/moon button in `Header` toggles between light and dark directly.
+
+**FOUC prevention**: `index.html` contains a blocking inline `<script>` in `<head>` that reads localStorage and sets both the `dark` class and a raw `style.background` on `<html>` before any CSS or JS loads. The hardcoded hex values (`#121213` dark, `#fffdf8` light) must stay in sync with `--background` in `index.css`.
+
+All elements share a `0.2s ease` transition on `background-color`, `border-color`, and `color` via a global `*` rule in `index.css`, so theme switches are synchronised. `.tile-flip` does **not** set `transition: none` — CSS animations suppress transitions on the properties they control per spec, so the flip works correctly without it. Tiles carry an explicit `transition-colors duration-200` class rather than relying solely on the global rule.
 
 ## Word lists
 
