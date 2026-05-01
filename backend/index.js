@@ -8,6 +8,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(helmet())
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -48,6 +49,10 @@ app.get('/api/word', limiter, (req, res) => {
   const word = words[((days % words.length) + words.length) % words.length]
   const puzzleNumber = days + 1
   res.json({ word, date: dateStr, puzzleNumber })
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
 app.use((req, res) => {

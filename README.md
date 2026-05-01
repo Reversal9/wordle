@@ -40,6 +40,18 @@ Managed by a pure `gameReducer` in `src/hooks/gameReducer.ts`. `GameProvider` wr
 - Valid-word lookup is an O(1) `Set<string>` built once at module load from `frontend/data/valid-wordle-words.txt`
 - `@/` path alias resolves to `frontend/src/` in both Vite and TypeScript
 
+## Deploying (Render)
+
+The backend serves the built frontend as static files — one Render web service, no env vars needed.
+
+| Field | Value |
+|---|---|
+| **Root Directory** | *(leave blank)* |
+| **Build Command** | `cd frontend && npm ci && npm run build && cd ../backend && npm ci` |
+| **Start Command** | `node backend/index.js` |
+
+Render's free tier spins down after 15 min of inactivity (~30s cold start). Use [UptimeRobot](https://uptimerobot.com) or [cron-job.org](https://cron-job.org) to ping `/api/word` every 5–10 minutes if you want it to stay warm.
+
 ## Running locally
 
 Start the backend first, then the frontend dev server:

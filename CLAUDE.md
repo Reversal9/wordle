@@ -34,12 +34,22 @@ For local development, start backend first, then frontend dev server.
 
 ### Data flow
 
+**Development:**
 ```
 browser → Vite dev server → /api/* proxy → Express (port 3000)
                                            └── backend/data/words.json
 ```
 
-The frontend fetches `/api/word?date=YYYY-MM-DD` on mount. The backend picks the word deterministically by days since `2026-04-30` (puzzle #1), cycling through the pre-generated word list.
+**Production (Render):**
+```
+browser → Express (Render)
+             ├── GET /api/word  →  word logic
+             └── GET /*         →  serves frontend/dist (static)
+```
+
+The frontend fetches `/api/word?date=YYYY-MM-DD` on mount using a relative URL — this works in both dev (via Vite proxy) and production (same origin). The backend picks the word deterministically by days since `2026-04-30` (puzzle #1), cycling through the pre-generated word list.
+
+**Render deploy settings:** root dir blank, build `cd frontend && npm ci && npm run build && cd ../backend && npm ci`, start `node backend/index.js`, no env vars needed.
 
 ### State machine
 
