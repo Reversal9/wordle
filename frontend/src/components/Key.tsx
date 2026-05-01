@@ -1,4 +1,4 @@
-import { LetterFeedback } from '../types'
+import type { LetterFeedback } from '../types'
 import { useGame } from '../hooks/useGame'
 
 type KeyProps = {

@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { useGame } from '../hooks/useGame'
 import { buildShareText, copyToClipboard } from '../lib/share'
 import { toast } from 'sonner'
-import { LetterFeedback } from '../types'
 
 const WIN_TIERS = ['🤯 Genius', '🔥 Magnificent', '⭐ Impressive', '👍 Splendid', '😅 Great', '😤 Phew']
 
