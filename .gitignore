@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Design doc
 wordle_design_doc.md
+docs/
