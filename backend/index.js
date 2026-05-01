@@ -1,9 +1,20 @@
 const express = require('express')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
 const fs = require('fs')
 const path = require('path')
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+app.use(helmet())
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
 
 const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/words.json'), 'utf-8'))
 const START_DATE = '2026-04-30'
@@ -30,13 +41,23 @@ function getLocalFallback() {
   return `${y}-${m}-${d}`
 }
 
-app.get('/api/word', (req, res) => {
+app.get('/api/word', limiter, (req, res) => {
   const dateStr = isValidDate(req.query.date) ? req.query.date : getLocalFallback()
   const days = daysSinceStart(dateStr)
   // Positive modulo handles any negative days (dates before START_DATE)
   const word = words[((days % words.length) + words.length) % words.length]
   const puzzleNumber = days + 1
   res.json({ word, date: dateStr, puzzleNumber })
+})
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' })
+})
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).json({ error: 'Internal server error' })
 })
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`))
