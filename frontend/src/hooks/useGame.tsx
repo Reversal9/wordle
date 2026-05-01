@@ -88,6 +88,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.ctrlKey || e.altKey || e.metaKey) return
+      const tag = (e.target as HTMLElement).tagName
+      if (['BUTTON', 'INPUT', 'TEXTAREA', 'SELECT', 'A'].includes(tag)) return
       if (e.key === 'Enter') submitGuess()
       else if (e.key === 'Backspace') deleteLetter()
       else if (/^[a-zA-Z]$/.test(e.key)) typeLetter(e.key.toLowerCase())
