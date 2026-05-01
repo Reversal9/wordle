@@ -30,6 +30,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'DELETE_LETTER': {
+      if (state.status !== 'playing') return state
       if (state.currentInput.length === 0) return state
       return { ...state, currentInput: state.currentInput.slice(0, -1) }
     }

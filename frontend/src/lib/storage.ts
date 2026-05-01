@@ -12,7 +12,9 @@ export function loadState(dateStr: string): SavedState | null {
   const raw = localStorage.getItem(key(dateStr))
   if (!raw) return null
   try {
-    return JSON.parse(raw) as SavedState
+    const parsed = JSON.parse(raw)
+    if (!parsed || !Array.isArray(parsed.guesses) || !Array.isArray(parsed.feedback)) return null
+    return parsed as SavedState
   } catch {
     return null
   }
