@@ -96,6 +96,14 @@ Components live in `src/components/ui/`. Add new components with `npx shadcn add
 
 All elements share a `0.2s ease` transition on `background-color`, `border-color`, and `color` via a global `*` rule in `index.css`, so theme switches are synchronised. `.tile-flip` does **not** set `transition: none` — CSS animations suppress transitions on the properties they control per spec, so the flip works correctly without it. Tiles carry an explicit `transition-colors duration-200` class rather than relying solely on the global rule.
 
+## Keep-alive
+
+`scripts/keep-alive.sh` pings the backend `/api/word` endpoint to prevent Render's free tier from spinning down. Reads the URL from `BACKEND_URL` env var. Run on a cron schedule every 10 minutes:
+
+```bash
+*/10 * * * * BACKEND_URL=https://your-backend.onrender.com/api/word /path/to/scripts/keep-alive.sh >> /tmp/wordle-keepalive.log 2>&1
+```
+
 ## Word lists
 
 - `backend/data/words.json` — pre-generated daily puzzle words (ordered, deterministic by date)

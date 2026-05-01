@@ -64,7 +64,17 @@ Two separate Render services — a Static Site for the frontend and a Web Servic
 
 Deploy the backend first to get its URL, then set `VITE_API_URL` before triggering the frontend build.
 
-Render's free Web Service tier spins down after 15 min of inactivity (~30s cold start). Use [UptimeRobot](https://uptimerobot.com) or [cron-job.org](https://cron-job.org) to ping `https://your-backend.onrender.com/api/word` every 5–10 minutes to keep it warm.
+Render's free Web Service tier spins down after 15 min of inactivity (~30s cold start). Use `scripts/keep-alive.sh` to prevent this:
+
+```bash
+# run manually
+BACKEND_URL=https://your-backend.onrender.com/api/word ./scripts/keep-alive.sh
+
+# or add to crontab (every 10 minutes)
+*/10 * * * * BACKEND_URL=https://your-backend.onrender.com/api/word /path/to/scripts/keep-alive.sh >> /tmp/wordle-keepalive.log 2>&1
+```
+
+Alternatively, point [UptimeRobot](https://uptimerobot.com) or [cron-job.org](https://cron-job.org) at `https://your-backend.onrender.com/api/word` every 5–10 minutes.
 
 ## Running locally
 
