@@ -17,12 +17,10 @@ export default function App() {
         <ErrorScreen />
       ) : (
         <>
-          <main className="flex flex-col items-center flex-1 w-full pt-2">
+          <main className="flex flex-col items-center w-full pt-2 pb-4 gap-4">
             <Board />
-          </main>
-          <footer className="w-full pb-4">
             <Keyboard />
-          </footer>
+          </main>
         </>
       )}
       <HowToPlayModal />

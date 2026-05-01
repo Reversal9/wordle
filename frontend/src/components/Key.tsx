@@ -30,8 +30,8 @@ export function Key({ value, feedback }: KeyProps) {
       onClick={handleClick}
       className={`
         flex items-center justify-center rounded
-        h-[var(--key-height)] min-w-[44px]
-        ${isWide ? 'px-3 text-sm font-semibold' : 'w-[44px] text-base font-bold'}
+        h-[var(--key-height)]
+        ${isWide ? 'flex-[1.5] text-sm font-semibold' : 'flex-1 text-base font-bold'}
         ${colorClass}
         select-none cursor-pointer transition-colors duration-200
       `}
