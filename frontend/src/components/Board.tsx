@@ -12,7 +12,7 @@ export function Board() {
     if (guesses.length === 0) return
     const row = guesses.length - 1
     setRevealingRow(row)
-    const timer = setTimeout(() => setRevealingRow(-1), 5 * 100 + 500)
+    const timer = setTimeout(() => setRevealingRow(-1), 5 * 200 + 1000)
     return () => clearTimeout(timer)
   }, [guesses.length])
 

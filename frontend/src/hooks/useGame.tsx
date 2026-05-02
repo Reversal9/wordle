@@ -51,9 +51,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'DELETE_LETTER' })
   }
 
-  // After each guess the tiles flip for 900ms (4 × 100ms stagger + 500ms flip).
-  // Block all input during this window, then open the game-over modal if needed.
-  const REVEAL_MS = 4 * 100 + 500
+  // After each guess the tiles flip for 1800ms (4 × 200ms stagger + 1000ms flip),
+  // plus a 200ms buffer so the last CSS animation fully settles before class removal.
+  const REVEAL_MS = 4 * 200 + 1000 + 200
   useEffect(() => {
     if (!state.isRevealing) return
     const timer = setTimeout(() => {

@@ -66,7 +66,7 @@ The `gameReducer` (`src/hooks/gameReducer.ts`) is a pure function that handles a
 - `validWords` (`src/lib/words.ts`) is a `Set<string>` built at module load from `frontend/data/valid-wordle-words.txt` via Vite's `?raw` import. Guesses are rejected before dispatch if not in this set.
 - localStorage is keyed `dnw-YYYY-MM-DD`, so different dates never collide. State is loaded after `LOAD_SUCCESS` so the word is always set before history is restored.
 - `LetterFeedback = 'G' | 'Y' | 'X'` is the single source of truth for tile color; CSS variables (`--color-correct`, `--color-present`, `--color-absent`) map to the visual colors in `index.css`. In dark mode `--color-absent` is overridden to `#4a4a4c` (deepslate) so exhausted tiles are visually distinct from empty ones.
-- `isRevealing` in `GameState` gates all input (typing, deleting, submitting) for 900ms after each guess — the duration of the full tile-flip sequence (`4 × 100ms stagger + 500ms flip`). `SUBMIT_GUESS` sets it; `REVEAL_DONE` clears it. The game-over modal is opened by a `useEffect` in `useGame.tsx` after `REVEAL_DONE`, not synchronously in the reducer.
+- `isRevealing` in `GameState` gates all input (typing, deleting, submitting) for 2000ms after each guess — the duration of the full tile-flip sequence (`4 × 200ms stagger + 1000ms flip + 200ms settle buffer`). `SUBMIT_GUESS` sets it; `REVEAL_DONE` clears it. The game-over modal is opened by a `useEffect` in `useGame.tsx` after `REVEAL_DONE`, not synchronously in the reducer.
 
 ### TypeScript constraints
 

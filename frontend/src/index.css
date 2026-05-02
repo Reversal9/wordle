@@ -113,7 +113,7 @@
 /* CSS animations suppress transitions on the properties they control (per spec),
    so no transition:none needed here — theme transitions still fire on tiles */
 .tile-flip {
-  animation: tile-flip 0.5s ease forwards;
+  animation: tile-flip 1s ease forwards;
 }
 
 .row-shake {

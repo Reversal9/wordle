@@ -22,7 +22,7 @@ export function Row({ letters, feedback, isShaking, isRevealing }: RowProps) {
           letter={tile.letter}
           feedback={tile.feedback}
           isRevealing={isRevealing}
-          revealDelay={i * 100}
+          revealDelay={i * 200}
         />
       ))}
     </div>
